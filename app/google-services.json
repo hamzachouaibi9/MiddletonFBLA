@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "659302356573",
+    "firebase_url": "https://middletonfbla-6f468.firebaseio.com",
+    "project_id": "middletonfbla-6f468",
+    "storage_bucket": "middletonfbla-6f468.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659302356573:android:7e907f0d0e2692bf2edfb4",
+        "android_client_info": {
+          "package_name": "com.middleton.middletonfbla"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "659302356573-g55846ah18i8inruga2n8ej5kfn9e5ds.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.middleton.middletonfbla",
+            "certificate_hash": "426bf81fb51909a1ac229318daf90d6784cfae8a"
+          }
+        },
+        {
+          "client_id": "659302356573-s23g6ekot7t08n67rhl0lo92k0vqfegt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSJTxk-jw3vFXtQy2Jij0pihQapQFqRAo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "659302356573-s23g6ekot7t08n67rhl0lo92k0vqfegt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
