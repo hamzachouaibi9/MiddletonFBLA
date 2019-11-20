@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     TextInputEditText emailET, passET;
-    Button loginBtn;
+    Button loginBtn,registerBtn;
     String email, password;
     
     @Override
@@ -32,6 +32,14 @@ public class LoginActivity extends AppCompatActivity {
         emailET = (TextInputEditText) findViewById(R.id.loginEmail);
         passET = (TextInputEditText) findViewById(R.id.loginPass);
         loginBtn = (Button) findViewById(R.id.loginBtn);
+        registerBtn = (Button) findViewById(R.id.registerBtn);
+
+        registerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
         
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,14 +47,14 @@ public class LoginActivity extends AppCompatActivity {
                 email = emailET.getText().toString().trim();
                 password = passET.getText().toString().trim();
 
-                if (password.length()<6){
+                if (email.isEmpty()) {
+                    emailET.setError("Need an Email to continue");
+                    return;
+                }else if (password.length()<6){
                     passET.setError("Password needs to be 6 characters or longer");
                     return;
                 }else if (password.isEmpty()){
                     passET.setError("Need a password to continue");
-                    return;
-                }else if (email.isEmpty()){
-                    emailET.setError("Need an Email to continue");
                     return;
                 }
                 
