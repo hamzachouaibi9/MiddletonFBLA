@@ -1,3 +1,36 @@
 <resources>
     <string name="app_name">Middleton FBLA</string>
+
+    <string-array name="gradeSpinner">
+        <item>Grade Level</item>
+        <item>9th</item>
+        <item>10th</item>
+        <item>11th</item>
+        <item>12th</item>
+    </string-array>
+
+    <string-array name="shirtSize">
+        <item>Select</item>
+        <item>XS</item>
+        <item>S</item>
+        <item>M</item>
+        <item>L</item>
+        <item>XL</item>
+        <item>XXL</item>
+    </string-array>
+
+    <string-array name="paymentType">
+        <item>Select</item>
+        <item>Online Payment</item>
+        <item>Cash or Check</item>
+    </string-array>
+
+    <string name="title_activity_main">Middleton FBLA</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
 </resources>

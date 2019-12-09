@@ -4,13 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                registerBtn.setAnimation(rotation);
+                rotateFab(registerBtn, true);
 
                 email = emailET.getText().toString().trim();
                 password = passwordET.getText().toString().trim();
@@ -65,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
                     emailET.setError("Need an Email");
                     registerBtn.clearAnimation();
                     return;
-                }else if (password.isEmpty()){
+                }else if (password.isEmpty()) {
                     passwordET.setError("Need a Password");
                     registerBtn.clearAnimation();
                     return;
@@ -75,12 +77,12 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            startActivity(new Intent(RegisterActivity.this, RegisterActivity2.class));
+                            startActivity(new Intent(RegisterActivity.this, RegisterInformation.class));
                         }else if(!task.isSuccessful()){
                             try{
                                 throw task.getException();
                             } catch (FirebaseAuthWeakPasswordException weakPassword) {
-                               passwordET.setError("Password needs to be 6 characters or longer.");
+                                passwordET.setError("Password needs to be 6 characters or longer.");
                                 registerBtn.clearAnimation();
                             }catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
                                 emailET.setError("Email is in incorrect format");
@@ -90,15 +92,30 @@ public class RegisterActivity extends AppCompatActivity {
                                 registerBtn.clearAnimation();
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                registerBtn.clearAnimation();
                             }
+                            rotateFab(registerBtn, false);
                         }
                     }
                 });
-
             }
         });
 
+
+    }
+
+    public static boolean rotateFab(final View v, final boolean rotate) {
+        do {
+            v.animate().setDuration(1000)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            rotateFab(v,rotate);
+                        }
+                    })
+                    .rotation(rotate ? 360f: 0f);
+            return rotate;
+        }while (true);
 
     }
 }

@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.middleton.middletonfbla.Register.RegisterActivity;
+import com.middleton.middletonfbla.Register.RegisterPayment;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -28,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
-        
+
         emailET = (TextInputEditText) findViewById(R.id.loginEmail);
         passET = (TextInputEditText) findViewById(R.id.loginPass);
         loginBtn = (Button) findViewById(R.id.loginBtn);

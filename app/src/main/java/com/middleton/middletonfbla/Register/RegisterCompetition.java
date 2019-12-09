@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.middleton.middletonfbla.R;
 
-public class RegisterActivity2 extends AppCompatActivity {
+public class RegisterCompetition extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register2);
+        setContentView(R.layout.activity_register_competition);
     }
 }
