@@ -116,22 +116,31 @@ public class RegisterPayment extends AppCompatActivity {
                     builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            database.update("shirtSize", size, "paymentType", type).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        startActivity(new Intent(RegisterPayment.this, RegisterCompetition.class));
+                                    }else{
+                                        Toast.makeText(RegisterPayment.this, "An unexpected error has occurred. Please Try Again", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                         }
                     });
                     builder.show();
-                }
-
-                database.update("shirtSize", size, "paymentType", type).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            startActivity(new Intent(RegisterPayment.this, null));
-                        }else{
-                            Toast.makeText(RegisterPayment.this, "An unexpected error has occurred. Please Try Again", Toast.LENGTH_SHORT).show();
+                }else{
+                    database.update("shirtSize", size, "paymentType", type).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                startActivity(new Intent(RegisterPayment.this, RegisterCompetition.class));
+                            }else{
+                                Toast.makeText(RegisterPayment.this, "An unexpected error has occurred. Please Try Again", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
             }
         });

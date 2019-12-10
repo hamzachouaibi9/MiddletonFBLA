@@ -1,15 +1,28 @@
 package com.middleton.middletonfbla.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.middleton.middletonfbla.R;
 
 /**
@@ -31,6 +44,13 @@ public class ContactFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    Button sendBtn;
+    EditText messageET;
+    FirebaseAuth auth;
+    DocumentReference database;
+    String email, name, message, UID;
+
 
     public ContactFragment() {
         // Required empty public constructor
@@ -61,6 +81,54 @@ public class ContactFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        auth = FirebaseAuth.getInstance();
+        UID = auth.getCurrentUser().getUid();
+        email = auth.getCurrentUser().getEmail();
+        database = FirebaseFirestore.getInstance().collection("User_Information").document(UID);
+        database.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+               if (snapshot.exists()){
+                   name = snapshot.get("name").toString().trim();
+               }
+            }
+        });
+
+    }
+
+    @Override
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        messageET = (EditText) view.findViewById(R.id.contactMessage);
+        sendBtn = (Button) view.findViewById(R.id.contactSend);
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                message = messageET.getText().toString().trim();
+                if (message.isEmpty()){
+                    messageET.setError("Need a message to send.");
+                    return;
+                }
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("text/plain");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{"hamza.chouaibi9@hotmail.com"});
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Middleton FBLA contact");
+                emailIntent.putExtra(Intent.EXTRA_TEXT   , message);
+
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                    messageET.setText("");
+                } catch (android.content.ActivityNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+
+            }
+        });
+
     }
 
     @Override

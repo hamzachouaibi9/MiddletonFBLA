@@ -1,15 +1,20 @@
 package com.middleton.middletonfbla.Register;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -31,13 +36,28 @@ public class RegisterActivity extends AppCompatActivity {
     FloatingActionButton registerBtn;
     FirebaseAuth firebaseAuth;
     String email, password;
+    Toolbar toolbar;
+    ProgressDialog progressDialog;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        toolbar = findViewById(R.id.toolbar3);
+        setSupportActionBar(toolbar);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+        toolbar.setTitle("Register");
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Registering new user.");
+        progressDialog.setCancelable(false);
+
         emailET = (TextInputEditText) findViewById(R.id.registerEmail);
         passwordET = (TextInputEditText) findViewById(R.id.registerPassword);
         registerBtn = (FloatingActionButton) findViewById(R.id.registerNext);
@@ -73,12 +93,15 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+                progressDialog.show();
+
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             startActivity(new Intent(RegisterActivity.this, RegisterInformation.class));
                         }else if(!task.isSuccessful()){
+                            progressDialog.dismiss();
                             try{
                                 throw task.getException();
                             } catch (FirebaseAuthWeakPasswordException weakPassword) {
@@ -101,6 +124,19 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+
+            case android.R.id.home:
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     public static boolean rotateFab(final View v, final boolean rotate) {

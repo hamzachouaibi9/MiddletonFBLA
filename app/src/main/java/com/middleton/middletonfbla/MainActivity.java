@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     CollectionReference database;
     ImageView imageView;
     TextView email, name;
+    Toolbar toolbar;
 
 
     @Override
@@ -58,16 +60,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         auth = FirebaseAuth.getInstance();
         database = FirebaseFirestore.getInstance().collection("User_Information");
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -101,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     if (documentSnapshot.get("imageLink") != null) {
                         Picasso.get().load(documentSnapshot.get("imageLink").toString().trim()).into(imageView);
                     }else{
-                        Picasso.get().load(R.drawable.logo_blue).into(imageView);
+                        Picasso.get().load(R.drawable.logo_white).into(imageView);
                     }
                 }else{
                     startActivity(new Intent(MainActivity.this, RegisterActivity.class));
@@ -112,41 +106,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == R.id.action_QA){
+            toolbar.setTitle("Q & A");
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new QAFragment()).commit();
         }else if(item.getItemId() == R.id.action_contactUs){
+            toolbar.setTitle("Contact Us");
             getSupportFragmentManager().beginTransaction().replace(R.id.container, new ContactFragment()).commit();
         }else if(item.getItemId() == R.id.action_logout){
             auth.signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
         }
 
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_home:
+                toolbar.setTitle("Middleton FBLA");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
                 break;
             case R.id.nav_calendar:
+                toolbar.setTitle("Calendar");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new CalendarFragment()).commit();
                 break;
             case R.id.nav_websites:
+                toolbar.setTitle("FBLA Websites");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new WebsiteFragment()).commit();
                 break;
             case R.id.nav_socialMedia:
+                toolbar.setTitle("Middleton Social Media");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new SocialMediaFragment()).commit();
                 break;
             case R.id.nav_events:
+                toolbar.setTitle("Events");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new EventsFragment()).commit();
                 break;
             case R.id.nav_gallery:
+                toolbar.setTitle("Gallery");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new GalleryFragment()).commit();
                 break;
             case R.id.nav_about:
+                toolbar.setTitle("About Us");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new AboutUsFragment()).commit();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
