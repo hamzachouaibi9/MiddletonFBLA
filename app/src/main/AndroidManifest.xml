@@ -18,12 +18,18 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/NoActionBar"/>
-        <activity android:name=".Register.RegisterCompetition"/>
-        <activity android:name=".Register.RegisterPayment"/>
-        <activity android:name=".Register.RegisterInformation"/>
-        <activity android:name=".Register.RegisterActivity"/>
-        <activity android:name=".LoginActivity">
+        <activity android:name=".Register.RegisterCompetition"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Register.RegisterPayment"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Register.RegisterInformation"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Register.RegisterActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
