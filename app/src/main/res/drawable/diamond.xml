@@ -12,7 +12,7 @@
                     android:height="200dp" />
                 <gradient
                     android:startColor="#252525"
-                    android:endColor="#252525" />
+                    android:endColor="@color/backgroundColor" />
                 <stroke
                     android:width="5dp"
                     android:color="#252525" />
