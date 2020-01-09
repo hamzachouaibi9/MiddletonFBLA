@@ -23,6 +23,9 @@
             android:id="@+id/nav_websites"
             android:title="Website" />
         <item
+            android:id="@+id/nav_officer"
+            android:title="Officer Team"/>
+        <item
             android:id="@+id/nav_about"
             android:title="About Us" />
     </group>

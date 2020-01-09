@@ -15,26 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Design.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PopUpActivity"
+        <activity android:name=".Register.PopUpActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.popMe"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Register.RegisterCompetition"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Register.RegisterPayment"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Register.RegisterInformation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Register.RegisterActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">

@@ -11,7 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.middleton.middletonfbla.PopUpActivity;
+import com.middleton.middletonfbla.MainActivity;
 import com.middleton.middletonfbla.R;
 
 public class RegisterCompetition extends AppCompatActivity implements View.OnClickListener {
@@ -19,16 +19,12 @@ public class RegisterCompetition extends AppCompatActivity implements View.OnCli
     CardView objective, speaking, design, hybrid, writing;
     FloatingActionButton registerCompBtn;
     FirebaseAuth auth;
-    DocumentReference documentReference;
-    String competition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_competition);
         auth = FirebaseAuth.getInstance();
-        documentReference = FirebaseFirestore.getInstance().collection("User_Information").document(auth.getCurrentUser().getUid());
-
         objective = (CardView) findViewById(R.id.objectiveCardview);
         speaking = (CardView) findViewById(R.id.speakingCardview);
         design = (CardView) findViewById(R.id.designCardview);
@@ -46,7 +42,7 @@ public class RegisterCompetition extends AppCompatActivity implements View.OnCli
         registerCompBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                documentReference.update("competition", competition);
+                startActivity(new Intent(RegisterCompetition.this, MainActivity.class));
             }
         });
 
@@ -56,19 +52,29 @@ public class RegisterCompetition extends AppCompatActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         if(v == hybrid){
-            startActivity(new Intent(RegisterCompetition.this, PopUpActivity.class));
+            Intent intent = new Intent(this, PopUpActivity.class);
+            intent.putExtra("data", "hybrid");
+            startActivity(intent);
         }
         if(v == objective){
-            startActivity(new Intent(RegisterCompetition.this, PopUpActivity.class));
+            Intent intent = new Intent(this, PopUpActivity.class);
+            intent.putExtra("data", "objective");
+            startActivity(intent);
         }
         if (v == speaking){
-            startActivity(new Intent(RegisterCompetition.this, PopUpActivity.class));
+            Intent intent = new Intent(this, PopUpActivity.class);
+            intent.putExtra("data", "speaking");
+            startActivity(intent);
         }
         if (v == design){
-            startActivity(new Intent(RegisterCompetition.this, PopUpActivity.class));
+            Intent intent = new Intent(this, PopUpActivity.class);
+            intent.putExtra("data", "design");
+            startActivity(intent);
         }
         if (v == writing){
-            startActivity(new Intent(RegisterCompetition.this, PopUpActivity.class));
+            Intent intent = new Intent(this, PopUpActivity.class);
+            intent.putExtra("data", "writing");
+            startActivity(intent);
         }
     }
 }

@@ -31,6 +31,7 @@ import com.middleton.middletonfbla.Fragments.ContactFragment;
 import com.middleton.middletonfbla.Fragments.EventsFragment;
 import com.middleton.middletonfbla.Fragments.GalleryFragment;
 import com.middleton.middletonfbla.Fragments.HomeFragment;
+import com.middleton.middletonfbla.Fragments.OfficerFragment;
 import com.middleton.middletonfbla.Fragments.QAFragment;
 import com.middleton.middletonfbla.Fragments.SocialMediaFragment;
 import com.middleton.middletonfbla.Fragments.WebsiteFragment;
@@ -155,6 +156,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_gallery:
                 toolbar.setTitle("Gallery");
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, new GalleryFragment()).commit();
+                break;
+            case R.id.nav_officer:
+                toolbar.setTitle("Officer Team");
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, new OfficerFragment()).commit();
                 break;
             case R.id.nav_about:
                 toolbar.setTitle("About Us");

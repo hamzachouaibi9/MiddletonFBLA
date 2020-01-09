@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,7 +44,7 @@ public class RegisterInformation extends AppCompatActivity {
     ImageView profileImage;
     FirebaseFirestore db;
     StorageReference storageReference;
-    DocumentReference database;
+    CollectionReference database;
     FirebaseStorage storage;
     String name;
     String phone;
@@ -66,7 +67,7 @@ public class RegisterInformation extends AppCompatActivity {
         setContentView(R.layout.activity_register_information);
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-        database = db.collection("User_Information").document(mAuth.getUid().trim());
+        database = db.collection("User_Information");
         storageReference = FirebaseStorage.getInstance().getReference().child("accountImages");
         nameET = (TextInputEditText) findViewById(R.id.registerName);
         phoneET = (TextInputEditText) findViewById(R.id.registerPhone);
@@ -85,6 +86,14 @@ public class RegisterInformation extends AppCompatActivity {
             }
         });
 
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                uploadImage();
+            }
+        });
+
+
         registerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,16 +107,13 @@ public class RegisterInformation extends AppCompatActivity {
             }
         });
 
-        profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadImage();
-            }
-        });
-
     }
 
     private void addData(String name, String phone, String studentID, String gpa, String grade, String imageLink){
+
+        if(imageLink == null){
+            imageLink = "default";
+        }
 
         if(name.isEmpty()){
             nameET.setError("A name is required");
@@ -177,7 +183,7 @@ public class RegisterInformation extends AppCompatActivity {
 
         accountInfo = new AccountModel(name, Phone, StudentId, Grade, imageLink, GPA);
 
-        database.set(accountInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
+        database.document(mAuth.getCurrentUser().getUid()).set(accountInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){

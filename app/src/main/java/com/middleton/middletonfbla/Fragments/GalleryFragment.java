@@ -1,16 +1,31 @@
 package com.middleton.middletonfbla.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Gallery;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.middleton.middletonfbla.R;
+import com.middleton.middletonfbla.View_Holders.GalleryViewHolder;
+import com.middleton.middletonfbla.View_Holders.OfficerViewHolder;
+import com.middleton.middletonfbla.models.GalleryModel;
+import com.middleton.middletonfbla.models.OfficerModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +36,12 @@ import com.middleton.middletonfbla.R;
  * create an instance of this fragment.
  */
 public class GalleryFragment extends Fragment {
+    RecyclerView list;
+    CollectionReference database;
+    String link;
+    Query query;
+    FirestoreRecyclerAdapter<GalleryModel, GalleryViewHolder> adapter;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,6 +81,61 @@ public class GalleryFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        list = view.findViewById(R.id.galleryList);
+        database = FirebaseFirestore.getInstance().collection("gallery");
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        list.setLayoutManager(llm);
+        query = database.orderBy("rank", Query.Direction.ASCENDING);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirestoreRecyclerOptions<GalleryModel> options = new FirestoreRecyclerOptions.Builder<GalleryModel>()
+                .setQuery(query, GalleryModel.class)
+                .build();
+
+        adapter = new FirestoreRecyclerAdapter<GalleryModel, GalleryViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull GalleryViewHolder photo, int i, @NonNull final GalleryModel data) {
+                photo.setName(data.getName());
+                photo.setImage(data.getPicture());
+
+                photo.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        link = data.getLink();
+                        Uri uri = Uri.parse(link);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        startActivity(intent);
+                    }
+                });
+
+            }
+
+            @NonNull
+            @Override
+            public GalleryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.gallery_item, parent, false);
+                return new GalleryViewHolder(view);
+            }
+        };
+        list.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapter != null) {
+            adapter.stopListening();
         }
     }
 
