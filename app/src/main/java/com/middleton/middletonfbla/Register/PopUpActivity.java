@@ -5,7 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,15 +20,20 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.middleton.middletonfbla.MainActivity;
 import com.middleton.middletonfbla.R;
 import com.middleton.middletonfbla.View_Holders.CompetitionViewHolder;
 import com.middleton.middletonfbla.View_Holders.OfficerViewHolder;
@@ -34,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class PopUpActivity extends AppCompatActivity {
 
     RecyclerView competitionList;
@@ -42,6 +54,10 @@ public class PopUpActivity extends AppCompatActivity {
     CollectionReference database;
     FirebaseAuth auth;
     FirestoreRecyclerAdapter<CompetitionModel, CompetitionViewHolder> adapter;
+    int index = -1;
+    CircularProgressButton continueBtn;
+    ImageView exit;
+    Bitmap icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +67,13 @@ public class PopUpActivity extends AppCompatActivity {
         database = FirebaseFirestore.getInstance().collection("competitions");
         data = getIntent().getExtras().getString("data");
         query = database.whereEqualTo("type", data);
+        continueBtn = findViewById(R.id.continueBtn);
+        exit = findViewById(R.id.exitBtn);
+
+        icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_check_solid);
+
+        continueBtn.setVisibility(View.INVISIBLE);
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -58,7 +81,7 @@ public class PopUpActivity extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width * .85), (int)(height * .75));
+        getWindow().setLayout((int)(width * .85), (int)(height * .79));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
         params.gravity = Gravity.CENTER;
@@ -74,6 +97,13 @@ public class PopUpActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         competitionList.setLayoutManager(llm);
         competitionList.setClickable(true);
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
 
     }
@@ -94,9 +124,40 @@ public class PopUpActivity extends AppCompatActivity {
                 competition.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        index = position;
+                        notifyDataSetChanged();
+                        continueBtn.setVisibility(View.VISIBLE);
+                    }
+                });
+
+                if(index==position){
+                    competition.itemView.setBackgroundColor(Color.parseColor("#000000"));
+                }else{
+                    competition.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                }
+
+                continueBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        continueBtn.startAnimation();
                         DocumentReference userData = FirebaseFirestore.getInstance().collection("User_Information").document(auth.getCurrentUser().getUid());
-                        userData.update("competition", data.getName());
-                        finish();
+                        userData.update("competition", data.getName()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        startActivity(new Intent(PopUpActivity.this, MainActivity.class));
+                                    }
+                                }, 1000);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                continueBtn.revertAnimation();
+                            }
+                        });
                     }
                 });
 

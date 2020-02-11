@@ -11,6 +11,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,14 +32,16 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.middleton.middletonfbla.R;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class RegisterActivity extends AppCompatActivity {
 
     TextInputEditText emailET, passwordET;
-    FloatingActionButton registerBtn;
+    CircularProgressButton registerBtn;
     FirebaseAuth firebaseAuth;
     String email, password;
     Toolbar toolbar;
-    ProgressDialog progressDialog;
+    Bitmap icon;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -45,6 +49,9 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         firebaseAuth = FirebaseAuth.getInstance();
+
+        icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_check_solid);
 
         toolbar = findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
@@ -54,13 +61,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
         toolbar.setTitle("Register");
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Registering new user.");
-        progressDialog.setCancelable(false);
+
 
         emailET = (TextInputEditText) findViewById(R.id.registerEmail);
         passwordET = (TextInputEditText) findViewById(R.id.registerPassword);
-        registerBtn = (FloatingActionButton) findViewById(R.id.registerNext);
+        registerBtn = (CircularProgressButton) findViewById(R.id.registerNext);
 
         final Animation rotation = AnimationUtils.loadAnimation(RegisterActivity.this, R.anim.rotate);
         rotation.setFillAfter(true);
@@ -78,7 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                rotateFab(registerBtn, true);
+                registerBtn.startAnimation();
 
                 email = emailET.getText().toString().trim();
                 password = passwordET.getText().toString().trim();
@@ -93,30 +98,33 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                progressDialog.show();
-
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
-                            startActivity(new Intent(RegisterActivity.this, RegisterInformation.class));
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startActivity(new Intent(RegisterActivity.this, RegisterInformation.class));
+                                }
+                            },500);
                         }else if(!task.isSuccessful()){
-                            progressDialog.dismiss();
                             try{
                                 throw task.getException();
                             } catch (FirebaseAuthWeakPasswordException weakPassword) {
                                 passwordET.setError("Password needs to be 6 characters or longer.");
-                                registerBtn.clearAnimation();
+                                registerBtn.revertAnimation();
                             }catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
                                 emailET.setError("Email is in incorrect format");
-                                registerBtn.clearAnimation();
+                                registerBtn.revertAnimation();
                             } catch (FirebaseAuthUserCollisionException existEmail){
                                 builder.show();
-                                registerBtn.clearAnimation();
+                                registerBtn.revertAnimation();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            rotateFab(registerBtn, false);
+                            registerBtn.revertAnimation();
                         }
                     }
                 });
@@ -139,19 +147,5 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    public static boolean rotateFab(final View v, final boolean rotate) {
-        do {
-            v.animate().setDuration(1000)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            rotateFab(v,rotate);
-                        }
-                    })
-                    .rotation(rotate ? 360f: 0f);
-            return rotate;
-        }while (true);
 
-    }
 }

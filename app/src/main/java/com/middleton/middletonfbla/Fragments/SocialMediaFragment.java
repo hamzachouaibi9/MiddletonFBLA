@@ -79,11 +79,11 @@ public class SocialMediaFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snapchat.com/add/" + ""));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://snapchat.com/add/" + "fblatigers"));
                     intent.setPackage("com.snapchat.android");
                     startActivity(intent);
                 } catch (Exception e) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://snapchat.com/add/" + "")));
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://snapchat.com/add/" + "fblatigers")));
                 }
             }
         });

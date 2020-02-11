@@ -5,8 +5,12 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -19,13 +23,16 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.middleton.middletonfbla.Register.RegisterActivity;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class LoginActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     TextInputEditText emailET, passET;
-    Button loginBtn,registerBtn;
+    CircularProgressButton loginBtn;
+    Button registerBtn;
     String email, password;
-    ProgressDialog progressDialog;
+    Bitmap icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +40,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("Logging In");
-
         if(firebaseAuth.getCurrentUser() != null){
             startActivity(new Intent(this, MainActivity.class));
+        }else{
+
         }
+
+        icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_check_solid);
 
         emailET = (TextInputEditText) findViewById(R.id.loginEmail);
         passET = (TextInputEditText) findViewById(R.id.loginPass);
-        loginBtn = (Button) findViewById(R.id.loginBtn);
+        loginBtn = (CircularProgressButton) findViewById(R.id.loginBtn);
         registerBtn = (Button) findViewById(R.id.registerBtn);
 
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -56,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginBtn.startAnimation();
                 email = emailET.getText().toString().trim();
                 password = passET.getText().toString().trim();
 
@@ -70,20 +79,24 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                progressDialog.show();
-                
                 firebaseAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-                        Toast.makeText(LoginActivity.this, authResult.getUser().getUid(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
+                            }
+                        },100);
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        progressDialog.cancel();
                         Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
+                        loginBtn.revertAnimation();
                     }
                 });
                 

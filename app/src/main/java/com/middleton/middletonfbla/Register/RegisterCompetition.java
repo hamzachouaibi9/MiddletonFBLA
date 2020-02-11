@@ -5,19 +5,17 @@ import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.middleton.middletonfbla.MainActivity;
 import com.middleton.middletonfbla.R;
 
 public class RegisterCompetition extends AppCompatActivity implements View.OnClickListener {
 
     CardView objective, speaking, design, hybrid, writing;
-    FloatingActionButton registerCompBtn;
     FirebaseAuth auth;
 
     @Override
@@ -30,21 +28,46 @@ public class RegisterCompetition extends AppCompatActivity implements View.OnCli
         design = (CardView) findViewById(R.id.designCardview);
         hybrid = (CardView) findViewById(R.id.hybridCardview);
         writing = (CardView) findViewById(R.id.writingCardview);
-        registerCompBtn = (FloatingActionButton) findViewById(R.id.registerComp);
+
+        final Animation animationLeft = AnimationUtils.loadAnimation(this, R.anim.bounce_left);
+        final Animation animationRight = AnimationUtils.loadAnimation(this, R.anim.bounce_right);
+        speaking.startAnimation(animationRight);
+        design.startAnimation(animationLeft);
+        objective.startAnimation(animationRight);
+        hybrid.startAnimation(animationLeft);
+        writing.startAnimation(animationRight);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        },900);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        },1400);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        },1900);
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+            }
+        },2400);
+
 
         objective.setOnClickListener(this);
         speaking.setOnClickListener(this);
         design.setOnClickListener(this);
         hybrid.setOnClickListener(this);
         writing.setOnClickListener(this);
-
-
-        registerCompBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(RegisterCompetition.this, MainActivity.class));
-            }
-        });
 
 
     }

@@ -95,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     name.setText(Name);
                     if (documentSnapshot.get("imageLink") != null) {
                         Picasso.get().load(documentSnapshot.get("imageLink").toString().trim()).into(imageView);
+                    }else if (documentSnapshot.get("imageLink").equals("default")){
+                        Picasso.get().load(R.drawable.logo_white).into(imageView);
                     }else{
                         Picasso.get().load(R.drawable.logo_white).into(imageView);
                     }

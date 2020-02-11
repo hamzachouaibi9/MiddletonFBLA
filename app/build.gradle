@@ -7,7 +7,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         multiDexEnabled true
-        versionCode 1
+        versionCode 6
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,5 +41,12 @@ dependencies {
     implementation 'com.paypal.sdk:paypal-android-sdk:2.16.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.apis:google-api-services-calendar:v3-rev84-1.18.0-rc'
+    implementation 'com.github.aakira:expandable-layout:1.4.2@aar'
+    implementation 'com.github.sundeepk:compact-calendar-view:3.0.0'
+    implementation 'br.com.simplepass:loading-button-android:2.2.0'
+
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'

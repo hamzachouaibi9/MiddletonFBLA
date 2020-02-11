@@ -45,21 +45,22 @@
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
-                android:text="Select which competition you are interested in doing."
+                android:layout_marginEnd="8dp"
+                android:text="Select the competition you are interested in doing."
                 android:textColor="#000000"
-                android:textSize="20dp"
+                android:textSize="18dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="44dp"
                 android:id="@+id/speakingCardview"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="40dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6">
 
@@ -68,23 +69,23 @@
                     android:layout_height="100dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
-                    android:src="@drawable/ic_microphone"/>
+                    android:src="@drawable/ic_microphone" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:text="Speaking"
-                    android:textSize="16dp"
                     android:textColor="#000000"
-                    android:layout_gravity="bottom|center_horizontal"/>
+                    android:textSize="16dp" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="44dp"
                 android:id="@+id/designCardview"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView6">
@@ -99,22 +100,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:text="Design"
-                    android:textSize="16dp"
                     android:textColor="#000000"
-                    android:layout_gravity="bottom|center_horizontal"/>
+                    android:textSize="16dp" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="16dp"
                 android:id="@+id/objectiveCardview"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/speakingCardview">
 
                 <ImageView
@@ -127,18 +128,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:text="Objective Testing"
-                    android:textSize="16dp"
                     android:textColor="#000000"
-                    android:layout_gravity="bottom|center_horizontal"/>
+                    android:textSize="16dp" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="16dp"
                 android:id="@+id/hybridCardview"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/objectiveCardview">
@@ -153,19 +154,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:text="Hybrid"
-                    android:textSize="16dp"
                     android:textColor="#000000"
-                    android:layout_gravity="bottom|center_horizontal"/>
+                    android:textSize="16dp" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
-                android:layout_height="170dp"
-                android:layout_marginTop="16dp"
                 android:id="@+id/writingCardview"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/objectiveCardview">
 
@@ -179,25 +180,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:text="Writing"
-                    android:textSize="16dp"
                     android:textColor="#000000"
-                    android:layout_gravity="bottom|center_horizontal"/>
+                    android:textSize="16dp" />
 
             </androidx.cardview.widget.CardView>
 
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/registerComp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/backgroundColor"
-                android:clickable="true"
-                android:layout_marginTop="8dp"
-                android:src="@drawable/ic_arrow_right_solid"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/hybridCardview" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

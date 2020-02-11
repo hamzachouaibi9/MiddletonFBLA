@@ -10,8 +10,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,17 +37,18 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
+import br.com.simplepass.loadingbutton.customViews.CircularProgressButton;
+
 public class RegisterInformation extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 234;
     TextInputEditText nameET, phoneET,idET,gpaET;
     Spinner gradeSpinner;
-    FloatingActionButton registerBTN;
+    CircularProgressButton registerBTN;
     ImageView profileImage;
     FirebaseFirestore db;
     StorageReference storageReference;
     CollectionReference database;
-    FirebaseStorage storage;
     String name;
     String phone;
     String studentID;
@@ -60,6 +63,7 @@ public class RegisterInformation extends AppCompatActivity {
     FirebaseAuth mAuth;
     AlertDialog.Builder alertDialog;
     private Uri filePath;
+    Bitmap icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class RegisterInformation extends AppCompatActivity {
         gpaET = (TextInputEditText) findViewById(R.id.registerGPA);
         gradeSpinner = (Spinner) findViewById(R.id.registerGrade);
         profileImage = (ImageView) findViewById(R.id.registerImage);
-        registerBTN = (FloatingActionButton) findViewById(R.id.registerInfoBtn);
+        registerBTN = (CircularProgressButton) findViewById(R.id.registerInfoBtn);
 
         alertDialog = new AlertDialog.Builder(this);
         alertDialog.setMessage("You need to have a 2.0 GPA or higher to be in FBLA");
@@ -97,7 +101,6 @@ public class RegisterInformation extends AppCompatActivity {
         registerBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                rotateFab(registerBTN, true);
                 name = nameET.getText().toString().trim();
                 phone = phoneET.getText().toString().trim();
                 studentID = idET.getText().toString().trim();
@@ -164,8 +167,8 @@ public class RegisterInformation extends AppCompatActivity {
         if(GPA > 4.0){
             gpaET.setError("Your GPA should be out of a 4.0 scale");
             return;
-        }else if(GPA <= 2.0){
-            alertDialog.show();
+        }else if(GPA < 2.0){
+            gpaET.setError("Must have a 2.0 GPA or higher");
             return;
         }
 
@@ -181,15 +184,25 @@ public class RegisterInformation extends AppCompatActivity {
             Grade = 12;
         }
 
+        icon = BitmapFactory.decodeResource(getResources(),
+                R.drawable.ic_check_solid);
+
         accountInfo = new AccountModel(name, Phone, StudentId, Grade, imageLink, GPA);
+        registerBTN.startAnimation();
 
         database.document(mAuth.getCurrentUser().getUid()).set(accountInfo).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
-                    startActivity(new Intent(RegisterInformation.this, RegisterPayment.class));
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startActivity(new Intent(RegisterInformation.this, RegisterPayment.class));
+                        }
+                    },2000);
                 }else{
-                    rotateFab(registerBTN, false);
+                    registerBTN.revertAnimation();
                     Toast.makeText(RegisterInformation.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -234,21 +247,5 @@ public class RegisterInformation extends AppCompatActivity {
 
     }
 
-
-    public static boolean rotateFab(final View v, final boolean rotate) {
-        do {
-            v.animate().setDuration(1000)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            rotateFab(v,rotate);
-                        }
-                    })
-                    .rotation(rotate ? 360f: 0f);
-            return rotate;
-        }while (true);
-
-    }
 
 }
